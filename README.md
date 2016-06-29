@@ -44,7 +44,7 @@ Then, in your view, you can access the module & its contents by name:
 
 <!-- block helper -->
 <% style_module(:events) do |styles| %>
-  <div id="<%= styles.style_for(:footer)">
+  <div id="<%= styles.style_for(:footer) %>">
     <%= link_to "Home", "/", class: styles.style_for(:link) %>
     © My company
   </div>
