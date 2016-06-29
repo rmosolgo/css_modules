@@ -1,0 +1,10 @@
+:module(pages) {
+  .list-item {
+    background-color: beige;
+    font-size: 1.3em;
+  }
+
+  .list-item a {
+    color: aliceblue;
+  }
+}

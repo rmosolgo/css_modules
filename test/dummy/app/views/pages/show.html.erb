@@ -1,0 +1,5 @@
+<h1 id="<%= style_for(:pages, :header) %>">Header</h1>
+<% style_module(:pages) do |styles| %>
+  <p class="<%= styles.style_for(:paragraph) %>">Paragraph</p>
+  <%= link_to "here", {}, class: styles.style_for(:link) %>
+<% end %>
