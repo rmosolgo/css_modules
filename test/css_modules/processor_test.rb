@@ -6,13 +6,12 @@ class ProcessorTest < Minitest::Test
     assert_includes(transformed_asset, expected_content)
   end
 
-  def test_it_uses_file_name_as_module_name
-    assert_transformed_asset_includes "pages.css", ".cGFnZXM_pages_list-item{background-color:beige;font-size:1.3em}"
-    assert_transformed_asset_includes "pages.css", ".cGFnZXM_pages_list-item a{color:aliceblue}"
-  end
-
   def test_it_processes_after_sass
     # It's compressed by Sass, too
     assert_transformed_asset_includes "events.css", "#ZXZlbnRz_events_header{font-weight:bold}\n"
+  end
+
+  def test_it_works_with_scss
+    assert_transformed_asset_includes "events2.css", ".ZXZlbnRzMg_events2_header{font-size:100px}"
   end
 end

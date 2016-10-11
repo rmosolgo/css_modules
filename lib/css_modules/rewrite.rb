@@ -34,6 +34,8 @@ module CSSModules
       rules.join("\n")
     end
 
+    # Combine `module_name` and `selector`, but don't prepend a `.` or `#`
+    # because this value will be inserted into the HTML page as `class=` or `id=`
     def modulize_selector(module_name, selector)
       transformed_name = transform_name(module_name)
       "#{transformed_name}_#{selector}"
@@ -44,12 +46,13 @@ module CSSModules
 
     # This parses the selector for :global and :module definitions.
     def parse_selector(selector)
-      if selector =~ RE_GLOBAL
-        selector.gsub(RE_GLOBAL, "")
-      elsif selector =~ RE_MODULE
+      if selector =~ RE_MODULE
         matches = RE_MODULE.match(selector)
         module_name = transform_name(matches[:module_name])
-        rebuild_selector(module_name, matches[:declarations])
+        declaration_parts = matches[:declarations].split(" ")
+        declaration_parts
+          .map { |declaration_or_operator| rebuild_selector(module_name, declaration_or_operator) }
+          .join(" ")
       elsif selector =~ /\s+/
         selector
           .split(/\s+/)

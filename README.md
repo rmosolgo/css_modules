@@ -1,14 +1,16 @@
 # CSSModules
 
-An alternative to "magic string" classnames in CSS.
+An alternative to "magic string" classnames in Sass or SCSS.
 
 Thanks to [Fatih Kadir Akın](https://twitter.com/fkadev) for his post, ["How I Implemented CSS Modules in Ruby on Rails, Easily"](https://medium.com/@fkadev/how-i-implemented-css-modules-to-ruby-on-rails-easily-abb324ce22d), which led the way on this idea!
 
 ## Usage
 
-Your stylesheets can define modules with `:module(module_name)`:
+### Add modules to stylesheets
 
-```css
+Your `.sass` or `.scss` stylesheets can define modules with `:module(module_name)`:
+
+```scss
 :module(events) {
   .header {
     font-style: bold;
@@ -23,6 +25,16 @@ Your stylesheets can define modules with `:module(module_name)`:
   }
 }
 ```
+
+Sass requires an extra `\`:
+
+```sass
+\:module(events)
+  .header
+    font-style: bold
+```
+
+### Put modulized names into HTML
 
 To access the contents of a module in a view, you must include the helpers in your controller:
 
@@ -51,6 +63,8 @@ Then, in your view, you can access the module & its contents by name:
 <% end %>
 ```
 
+### Use modulized names in JavaScript
+
 In JavaScript, you can include a helper to access module styles:
 
 ```jsx
@@ -71,7 +85,14 @@ function header() {
 }
 ```
 
+`CSSModules` requires the global JS function `btoa`. To include a polyfill from this gem, add:
+
+```js
+//= require base64
+```
+
 ## Installation
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -90,8 +111,6 @@ $ gem install css_modules
 
 ## TODO
 
-- Create a mechanism for opting in (converting all stylesheets is bad)
-- Use folders as nested modules?
 - Support minified identifiers for Production Env
 - Dead code warning for Development env:
   - Warn when not all styles are used?

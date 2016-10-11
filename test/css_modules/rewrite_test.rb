@@ -23,9 +23,9 @@ class RewriteTest < Minitest::Test
     assert_rewrite_module before_css, after_css
   end
 
-  def test_it_rewrites_bare_element_selectors
+  def test_it_doesnt_rewrite_bare_element_selectors
     before_css = ":module(item) span {\n  background: rbga(255, 255, 255, 0.8);\n}"
-    after_css = ".aXRlbQ_item span {\n  background: rbga(255, 255, 255, 0.8);\n}"
+    after_css = "span {\n  background: rbga(255, 255, 255, 0.8);\n}"
     assert_rewrite_module before_css, after_css
   end
 
@@ -36,26 +36,14 @@ class RewriteTest < Minitest::Test
   end
 
   def test_it_rewrites_immediate_child_selectors
-    before_css = ":module(item) ul > li {\n  background: rbga(255, 255, 255, 0.8);\n}"
-    after_css = ".aXRlbQ_item ul > li {\n  background: rbga(255, 255, 255, 0.8);\n}"
+    before_css = ":module(item) .parent > .child {\n  background: rbga(255, 255, 255, 0.8);\n}"
+    after_css = ".aXRlbQ_item_parent > .aXRlbQ_item_child {\n  background: rbga(255, 255, 255, 0.8);\n}"
     assert_rewrite_module before_css, after_css
   end
 
   def test_it_rewrites_pseudo_selectors
     before_css = ":module(item) .clearfix:after {\n content: \" \";\n}"
     after_css = ".aXRlbQ_item_clearfix:after {\n  content: \" \";\n}"
-    assert_rewrite_module before_css, after_css
-  end
-
-  def test_it_leaves_globals_alone
-    before_css = ":module(item) :global #footer {\n position: relative;\n}"
-    after_css = "#footer {\n  position: relative;\n}"
-    assert_rewrite_module before_css, after_css
-  end
-
-  def test_it_accepts_module_overrides
-    before_css = ":module(item) :module(layout) #footer { position: relative }"
-    after_css = "#bGF5b3V0_layout_footer {\n  position: relative;\n}"
     assert_rewrite_module before_css, after_css
   end
 

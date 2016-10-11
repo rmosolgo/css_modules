@@ -13,6 +13,14 @@ class CSSModulesJSTest < Minitest::Test
   def test_it_matches_ruby_to_js
     js_name = execjs_context.eval("CSSModules.styleFor('items', 'list-item')")
     ruby_name = CSSModules::Rewrite.modulize_selector("items", "list-item")
-    assert_equal(ruby_name, js_name)
+    assert_equal("aXRlbXM_items_list-item", js_name)
+    assert_equal("aXRlbXM_items_list-item", ruby_name)
+  end
+
+  def test_the_module_function_matches_ruby
+    js_name = execjs_context.eval("CSSModules.module('items')('list-item')")
+    ruby_name = CSSModules::Rewrite.modulize_selector("items", "list-item")
+    assert_equal("aXRlbXM_items_list-item", js_name)
+    assert_equal("aXRlbXM_items_list-item", ruby_name)
   end
 end

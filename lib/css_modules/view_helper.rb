@@ -7,15 +7,15 @@ module CSSModules
   #     helper CSSModules::ViewHelper
   #   end
   module ViewHelper
-    # Apply the styles from `module_name` for `class_name`
+    # Apply the styles from `module_name` for `selector_name`
     # @return [String] opaque classname for these styles
-    def style_for(module_name, class_name)
-      CSSModules::Rewrite.modulize_selector(module_name.to_s, class_name.to_s)
+    def style_for(module_name, selector_name)
+      CSSModules::Rewrite.modulize_selector(module_name.to_s, selector_name.to_s)
     end
 
     # Shorthand for getting several classnames from one module
-    # @yield [ModuleLookup] a module-bound helper for classnames
-    # @return [nil]
+    # @yieldparam [ModuleLookup] a module-bound helper for classnames
+    # @return [void]
     def style_module(module_name)
       lookup = ModuleLookup.new(module_name)
       yield(lookup)
@@ -27,8 +27,8 @@ module CSSModules
         @module_name = module_name.to_s
       end
 
-      def style_for(class_name)
-        CSSModules::Rewrite.modulize_selector(@module_name, class_name.to_s)
+      def style_for(selector_name)
+        CSSModules::Rewrite.modulize_selector(@module_name, selector_name.to_s)
       end
     end
   end
