@@ -3,16 +3,9 @@ require "base64"
 
 module CSSModules
   module Rewrite
-    # Global Modules
-    # :global .button { color: red }
-    RE_GLOBAL = /^\:global\s+/
-
     # Module Scopes
     # :module(login) { .button {color: red;} }
     RE_MODULE = /^\:module\((?<module_name>.*?)\)\s+(?<declarations>.*)/
-
-    RE_ID_SELECTOR = /^#/
-    RE_CLASS_SELECTOR = /^\./
 
     module_function
     # Take css module code as input, and rewrite it as
@@ -23,15 +16,16 @@ module CSSModules
       parser = CssParser::Parser.new
       parser.load_string!(css_module_code)
 
-      rules = []
+      rules = ""
 
       parser.each_selector do |selector, declarations, specificity|
         prettified_declarations = declarations.gsub(/;\s+/, ";\n  ")
         modulized_selector = parse_selector(selector)
-        rules.append "#{modulized_selector} {\n  #{prettified_declarations}\n}"
+        rules << "#{modulized_selector} {\n  #{prettified_declarations}\n}\n"
       end
 
-      rules.join("\n")
+      rules.strip!
+      rules
     end
 
     # Combine `module_name` and `selector`, but don't prepend a `.` or `#`
@@ -44,34 +38,30 @@ module CSSModules
     private
     module_function
 
-    # This parses the selector for :global and :module definitions.
+    # This parses the selector for `:module` definitions or does nothing.
     def parse_selector(selector)
-      if selector =~ RE_MODULE
-        matches = RE_MODULE.match(selector)
+      matches = RE_MODULE.match(selector)
+      if matches.nil?
+        selector
+      else
         module_name = transform_name(matches[:module_name])
         declaration_parts = matches[:declarations].split(" ")
         declaration_parts
           .map { |declaration_or_operator| rebuild_selector(module_name, declaration_or_operator) }
           .join(" ")
-      elsif selector =~ /\s+/
-        selector
-          .split(/\s+/)
-          .map { |selector_part| parse_selector(selector_part) }
-          .join(" ")
-      else
-        selector
       end
     end
 
     # If `selector` is a class or ID, scope it to this module.
-    # If it is a bare element, leave it unscoped (the scope will be applied later)
+    # If it is a bare element, leave it unscoped.
     def rebuild_selector(module_ident, selector)
-      if selector =~ RE_ID_SELECTOR
-        "##{module_ident}_#{selector.gsub(RE_ID_SELECTOR, "")}"
-      elsif selector =~ RE_CLASS_SELECTOR
-        ".#{module_ident}_#{selector.gsub(RE_CLASS_SELECTOR, "")}"
+      case selector[0]
+      when "#"
+        "##{module_ident}_#{selector[1..-1]}"
+      when "."
+        ".#{module_ident}_#{selector[1..-1]}"
       else
-        "#{selector}"
+        selector
       end
     end
 

@@ -48,8 +48,8 @@ class RewriteTest < Minitest::Test
   end
 
   def test_it_leaves_plain_css_alone
-    before_css = "#footer { position: relative }"
-    after_css = "#footer {\n  position: relative;\n}"
+    before_css = ":module(a) .b {\n  display: none;\n}\n #footer { position: relative }"
+    after_css = ".YQ_a_b {\n  display: none;\n}\n#footer {\n  position: relative;\n}"
     assert_rewrite_module before_css, after_css
   end
 end

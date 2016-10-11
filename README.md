@@ -115,6 +115,8 @@ $ gem install css_modules
 - Dead code warning for Development env:
   - Warn when not all styles are used?
   - Sprockets require CSS to JS? `require_styles` ?
+- Support plain `.css`
+- Use Sass's built-in parser?
 
 ## License
 
