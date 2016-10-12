@@ -50,14 +50,14 @@ Then, in your view, you can access the module & its contents by name:
 
 ```erb
 <!-- access by module + identifier -->
-<h1 id="<%= style_for(:events, :main_header) %>">
+<h1 id="<%= css_module("events", "main_header") %>">
   Events
 </h1>
 
 <!-- block helper -->
-<% style_module(:events) do |styles| %>
-  <div id="<%= styles.style_for(:footer) %>">
-    <%= link_to "Home", "/", class: styles.style_for(:link) %>
+<% css_module("events") do |events_module| %>
+  <div id="<%= events_module.selector("footer") %>">
+    <%= link_to "Home", "/", class: events_module.selector("link") %>
     © My company
   </div>
 <% end %>
@@ -68,24 +68,24 @@ Then, in your view, you can access the module & its contents by name:
 In JavaScript, you can include a helper to access module styles:
 
 ```jsx
-//= require CSSModules
+//= require css_module
 
 // Module + identifier
-var headerClass = CSSModules.styleFor("events", "header")
+var headerClass = CSSModule("events", "header")
 $("." + headerClass).text() // => "Events"
 
 // Or module helper function
-var eventsStyles = CSSModules.module("events")
+var eventsModule = CSSModule("events")
 
 function header() {
-  var headerClass = eventStyles("header")
+  var headerClass = eventsModule("header")
   return (
     <h1 className={headerClass}>Events</h1>
   )
 }
 ```
 
-`CSSModules` requires the global JS function `btoa`. To include a polyfill from this gem, add:
+`CSSModule` requires the global JS function `btoa`. To include a polyfill from this gem, add:
 
 ```js
 //= require base64
