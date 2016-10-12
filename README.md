@@ -121,6 +121,7 @@ $ gem install css_modules
 - Support plain `.css`
 - Use Sass's built-in parser?
 - Support Sprockets 3+
+- Check for hash collisions in development
 
 ## License
 

@@ -1,0 +1,59 @@
+// Usage:
+//
+// - Call with a module name + selector name to get a transformed (opaque) selector
+//
+//   ```js
+//   CSSModule("events_index", "header")
+//   // => "..." (some opaque string that matches the stylesheet)
+//   ```
+//
+// - Call with a module name to get a function for modulizing selectors
+//
+//   ```js
+//   var eventsModule = CSSModule("events_index")
+//   var headerSelector = eventsModule("header")
+//   var footerSelector = eventsModule("footer")
+//   ```
+//
+// This behavior has to match `CSSModules::Rewrite` in Ruby
+// so that generated selectors match.
+var CSSModule = (function() {
+  // This matches Transform.compute_hash in Ruby
+  var HASH_LIMIT = 10009;
+  var SUM_SIZE = 4;
+  function computeHash(inputString) {
+    var bytesCount = 0;
+    var stringSum = 0;
+    var byte;
+    for(var i = 0; i < inputString.length; i++) {
+      byte = inputString.charCodeAt(i);
+      stringSum += (byte * Math.pow(256, bytesCount))
+      bytesCount += 1;
+      bytesCount %= SUM_SIZE;
+    }
+
+    return stringSum % HASH_LIMIT;
+  };
+
+  function modulizeSelector(moduleName, selectorName, environment) {
+    if (environment === "production") {
+      return moduleName.substr(0, 1) + computeHash(moduleName + selectorName) + selectorName.substr(0, 1);
+    } else {
+      return moduleName + "_" + computeHash(moduleName + selectorName) + "_" + selectorName;
+    }
+  }
+
+  function _CSSModule(moduleName, selectorName, environment) {
+    environment || (environment = "<% Rails.env %>")
+
+    if (selectorName) {
+      return modulizeSelector(moduleName, selectorName, environment);
+    } else {
+      return function(selectorName) {
+        return modulizeSelector(moduleName, selectorName, environment);
+      };
+    }
+  };
+
+  return _CSSModule;
+})();

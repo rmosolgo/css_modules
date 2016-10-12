@@ -1,5 +1,5 @@
 require "css_parser"
-require "base64"
+require "css_modules/transform"
 
 module CSSModules
   module Rewrite
@@ -30,9 +30,12 @@ module CSSModules
 
     # Combine `module_name` and `selector`, but don't prepend a `.` or `#`
     # because this value will be inserted into the HTML page as `class=` or `id=`
+    # @param module_name [String] A CSS module name
+    # @param selector [String] A would-be DOM selector (without the leading `.` or `#`)
+    # @return [String] An opaque selector for this module-selector pair
     def modulize_selector(module_name, selector)
-      transformed_name = transform_name(module_name)
-      "#{transformed_name}_#{selector}"
+      tran = Rails.env.production? ? Transform::ProductionTransform : Transform::DevelopmentTransform
+      tran.transform(module_name, selector)
     end
 
     private
@@ -44,7 +47,7 @@ module CSSModules
       if matches.nil?
         selector
       else
-        module_name = transform_name(matches[:module_name])
+        module_name = matches[:module_name]
         declaration_parts = matches[:declarations].split(" ")
         declaration_parts
           .map { |declaration_or_operator| rebuild_selector(module_name, declaration_or_operator) }
@@ -57,19 +60,12 @@ module CSSModules
     def rebuild_selector(module_ident, selector)
       case selector[0]
       when "#"
-        "##{module_ident}_#{selector[1..-1]}"
+        "##{modulize_selector(module_ident, selector[1..-1])}"
       when "."
-        ".#{module_ident}_#{selector[1..-1]}"
+        ".#{modulize_selector(module_ident, selector[1..-1])}"
       else
         selector
       end
-    end
-
-    def transform_name(css_module_name)
-      # Some base64 characters aren't valid for CSS (eg, `=`)
-      opaque_string = Base64.encode64(css_module_name).gsub(/[^a-zA-Z0-9]/, "")
-      # p [css_module_name, opaque_string]
-      "#{opaque_string}_#{css_module_name}"
     end
   end
 end
