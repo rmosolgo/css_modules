@@ -21,8 +21,6 @@ module CSSModules
       end
 
       string_sum % HASH_LIMIT
-
-
     end
 
     module DevelopmentTransform

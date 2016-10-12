@@ -122,6 +122,7 @@ $ gem install css_modules
 - Use Sass's built-in parser?
 - Support Sprockets 3+
 - Check for hash collisions in development
+- Fix bundle cache
 
 ## License
 
