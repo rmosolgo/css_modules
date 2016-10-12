@@ -1,6 +1,6 @@
 # CSSModules
 
-An alternative to "magic string" classnames in Sass or SCSS.
+An alternative to "magic string" classnames in Sass or SCSS. Currently supports Sprockets 2 only 😖.
 
 Thanks to [Fatih Kadir Akın](https://twitter.com/fkadev) for his post, ["How I Implemented CSS Modules in Ruby on Rails, Easily"](https://medium.com/@fkadev/how-i-implemented-css-modules-to-ruby-on-rails-easily-abb324ce22d), which led the way on this idea!
 
@@ -117,6 +117,7 @@ $ gem install css_modules
   - Sprockets require CSS to JS? `require_styles` ?
 - Support plain `.css`
 - Use Sass's built-in parser?
+- Support Sprockets 3+
 
 ## License
 

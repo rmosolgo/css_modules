@@ -9,12 +9,12 @@ Gem::Specification.new do |s|
   s.version     = CSSModules::VERSION
   s.authors     = ["Robert Mosolgo"]
   s.email       = ["rdmosolgo@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of CSSModules."
-  s.description = "TODO: Description of CSSModules."
+  s.homepage    = "https://github.com/rmosolgo/css_modules"
+  s.summary     = "Prevent naming conflicts in Sass stylesheets"
+  s.description = "Provides a css-module-like experience to Sass/SCSS, Rails views and JavaScript"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails"
   s.add_dependency "css_parser"

@@ -6,6 +6,43 @@ class RewriteTest < Minitest::Test
     assert_equal(expected_rewritten_css, actual_rewritten_css)
   end
 
+  def test_it_does_real_code
+    real_code = "
+/* line 1344, /home/vagrant/Code/resources/app/assets/stylesheets/all/dialog.css.sass */
+:module(suggested-resources) .suggested-resource-container {
+  background: #f8f7f6;
+  border-radius: 2px;
+  border: 1px solid #cccaca;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 5px 10px;
+}
+/* line 1351, /home/vagrant/Code/resources/app/assets/stylesheets/all/dialog.css.sass */
+:module(suggested-resources) .suggested-resource-row {
+  padding: 5px 0px;
+  border-bottom: 1px dotted #cccaca;
+}
+/* line 1354, /home/vagrant/Code/resources/app/assets/stylesheets/all/dialog.css.sass */
+:module(suggested-resources) .suggested-resource-row:last-child {
+  border-bottom: none;
+}
+"
+    assert_rewrite_module(real_code, ".c3VnZ2VzdGVkLXJlc291cmNlcw_suggested-resources_suggested-resource-container {
+  background: #f8f7f6;
+  border-radius: 2px;
+  border: 1px solid #cccaca;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 5px 10px;
+}
+.c3VnZ2VzdGVkLXJlc291cmNlcw_suggested-resources_suggested-resource-row {
+  padding: 5px 0px;
+  border-bottom: 1px dotted #cccaca;
+}
+.c3VnZ2VzdGVkLXJlc291cmNlcw_suggested-resources_suggested-resource-row:last-child {
+  border-bottom: none;
+}")
+  end
 
   def test_it_rewrites_class_selectors
     assert_rewrite_module ":module(item) .title { color: red; }", ".aXRlbQ_item_title {\n  color: red;\n}"

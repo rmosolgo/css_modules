@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ProcessorTest < Minitest::Test
+class EngineTest < Minitest::Test
   def assert_transformed_asset_includes(asset_name, expected_content)
     transformed_asset = Rails.application.assets[asset_name].to_s
     assert_includes(transformed_asset, expected_content)
@@ -13,5 +13,9 @@ class ProcessorTest < Minitest::Test
 
   def test_it_works_with_scss
     assert_transformed_asset_includes "events2.css", ".ZXZlbnRzMg_events2_header{font-size:100px}"
+  end
+
+  def test_it_does_real_code
+    assert_transformed_asset_includes "dialog.css", ".c3VnZ2VzdGVkLXJlc291cmNlcw_suggested-resources_suggested-resource-row"
   end
 end

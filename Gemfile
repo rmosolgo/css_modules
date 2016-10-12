@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gemspec
-gem "rails", ">= 5.0.0.rc1"
+gem "rails"
+gem "sprockets", "~> 2.12"
 gem "sass-rails"
 gem "therubyracer"
