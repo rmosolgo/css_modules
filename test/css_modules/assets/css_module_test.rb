@@ -33,4 +33,9 @@ class CSSModulesJSTest < Minitest::Test
     assert_equal(ITEMS_LIST_ITEM_PRODUCTION, ruby_name)
     assert_equal(ITEMS_LIST_ITEM_PRODUCTION, js_name)
   end
+
+  def test_it_prints_the_current_env
+    assert_equal :development, CSSModules.env
+    assert_includes  Rails.application.assets["css_module.js"].to_s, '"development"'
+  end
 end

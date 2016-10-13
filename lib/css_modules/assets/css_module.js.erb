@@ -44,7 +44,7 @@ var CSSModule = (function() {
   }
 
   function _CSSModule(moduleName, selectorName, environment) {
-    environment || (environment = "<% CSSModules.env.to_s %>")
+    environment || (environment = "<%= CSSModules.env.to_s %>")
 
     if (selectorName) {
       return modulizeSelector(moduleName, selectorName, environment);
