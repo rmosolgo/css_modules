@@ -1,8 +1,9 @@
 require "test_helper"
 
 class CSSModulesJSTest < Minitest::Test
-  ITEMS_LIST_ITEM = "items_4719_list-item"
-  ITEMS_LIST_ITEM_PRODUCTION = "i4719l"
+  ITEMS_LIST_ITEM = "items_5257_list-item"
+  ITEMS_LIST_ITEM_PRODUCTION = "i5257list-item"
+
   def execjs_context
     @execjs_context ||= begin
       css_modules_js = Rails.application.assets["css_module.js"].to_s

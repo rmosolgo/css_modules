@@ -1,6 +1,13 @@
+@mixin heavy
+  // This shouldn't do anything
+  font-weight: 300
+
 \:module(events)
   @mixin heavy
     font-weight: bold
 
   #header
     @include heavy
+
+    &:hover
+      text-decoration: underline

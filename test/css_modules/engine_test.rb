@@ -8,14 +8,15 @@ class EngineTest < Minitest::Test
 
   def test_it_processes_after_sass
     # It's compressed by Sass, too
-    assert_transformed_asset_includes "events.css", "#events_3749_header{font-weight:bold}\n"
+    assert_transformed_asset_includes "events.css", "#events_7311_header{font-weight:bold}"
+    assert_transformed_asset_includes "events.css", "#events_7311_header:hover{text-decoration:underline}"
   end
 
   def test_it_works_with_scss
-    assert_transformed_asset_includes "events2.css", ".events2_557_header{font-size:100px}\n"
+    assert_transformed_asset_includes "events2.css", ".events2_1159_header{font-size:100px}"
   end
 
   def test_it_does_real_code
-    assert_transformed_asset_includes "dialog.css", ".suggested-resources_4530_suggested-resource-row"
+    assert_transformed_asset_includes "dialog.css", ".suggested-resources_2653_suggested-resource-row"
   end
 end

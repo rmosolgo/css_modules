@@ -37,9 +37,9 @@ var CSSModule = (function() {
 
   function modulizeSelector(moduleName, selectorName, environment) {
     if (environment === "production") {
-      return moduleName.substr(0, 1) + computeHash(moduleName + selectorName) + selectorName.substr(0, 1);
+      return moduleName.substr(0, 1) + computeHash(moduleName) + selectorName;
     } else {
-      return moduleName + "_" + computeHash(moduleName + selectorName) + "_" + selectorName;
+      return moduleName + "_" + computeHash(moduleName) + "_" + selectorName;
     }
   }
 

@@ -25,13 +25,13 @@ module CSSModules
 
     module DevelopmentTransform
       def self.transform(module_name, selector_name)
-        "#{module_name}_#{Transform.compute_hash(module_name + selector_name)}_#{selector_name}"
+        "#{module_name}_#{Transform.compute_hash(module_name)}_#{selector_name}"
       end
     end
 
     module ProductionTransform
       def self.transform(module_name, selector_name)
-        "#{module_name[0]}#{Transform.compute_hash(module_name + selector_name)}#{selector_name[0]}"
+        "#{module_name[0]}#{Transform.compute_hash(module_name)}#{selector_name}"
       end
     end
   end
