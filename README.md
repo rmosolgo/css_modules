@@ -114,12 +114,10 @@ $ gem install css_modules
 
 ## TODO
 
-- Support minified identifiers for Production Env
 - Dead code warning for Development env:
   - Warn when not all styles are used?
   - Sprockets require CSS to JS? `require_styles` ?
 - Support plain `.css`
-- Use Sass's built-in parser?
 - Support Sprockets 3+
 - Check for hash collisions in development
 - Fix bundle cache
