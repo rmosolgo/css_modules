@@ -35,25 +35,48 @@ var CSSModule = (function() {
     return stringSum % HASH_LIMIT;
   };
 
-  function modulizeSelector(moduleName, selectorName, environment) {
-    if (environment === "production") {
+  function modulizeSelector(moduleName, selectorName) {
+    if (_CSSModule.environment === "production") {
       return moduleName.substr(0, 1) + computeHash(moduleName) + selectorName;
     } else {
       return moduleName + "_" + computeHash(moduleName) + "_" + selectorName;
     }
   }
 
-  function _CSSModule(moduleName, selectorName, environment) {
-    environment || (environment = "<%= CSSModules.env.to_s %>")
+  function createJoinedSelector(moduleName, selectorNames, bareSelectorNames) {
+    var modulizedSelectorNames;
 
-    if (selectorName) {
-      return modulizeSelector(moduleName, selectorName, environment);
+    if (moduleName) {
+      // Split and apply transformation to each part:
+      modulizedSelectorNames = selectorNames
+        .split(" ")
+        .map(function(selectorName) {
+          return modulizeSelector(moduleName, selectorName);
+        })
     } else {
-      return function(selectorName) {
-        return modulizeSelector(moduleName, selectorName, environment);
+      // Don't bother splitting, it's a null module
+      modulizedSelectorNames = [selectorNames]
+    }
+
+    if (bareSelectorNames) {
+      modulizedSelectorNames.push(bareSelectorNames);
+    }
+
+    return modulizedSelectorNames.join(" ");
+  }
+
+  function _CSSModule(moduleName, selectorNames, bareSelectorNames) {
+    if (selectorNames) {
+      return createJoinedSelector(moduleName, selectorNames, bareSelectorNames);
+    } else {
+      return function(selectorNames, bareSelectorNames) {
+        return createJoinedSelector(moduleName, selectorNames, bareSelectorNames);
       };
     }
   };
+
+  _CSSModule.environment = "<%= CSSModules.env.to_s %>";
+
 
   return _CSSModule;
 })();

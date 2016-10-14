@@ -1,5 +1,9 @@
-<h1 id="<%= css_module(:pages, :header) %>">Header</h1>
+<h1 id="<%= css_module("pages", :header) %>">Header</h1>
 <% css_module("pages") do |pages| %>
-  <p class="<%= pages.selector("paragraph") %>">Paragraph</p>
+  <p class="<%= pages.selector("paragraph main-paragraph", "pull-left") %>">Paragraph</p>
   <%= link_to "here", {}, class: pages.selector(:link) %>
 <% end %>
+
+<%= link_to "null here", {}, class: css_module(nil, "link") %>
+
+<div class="<%= css_module("pages", "footer", "make-it-pop") %>">Footer</div>

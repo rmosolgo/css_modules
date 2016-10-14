@@ -66,6 +66,29 @@ Then, in your view, you can access the module & its contents by name:
 <% end %>
 ```
 
+#### Extra classes
+
+You can also provide _multiple_, space-separated class names and/or extra class names to join without a module:
+
+```ruby
+# Apply "events" to "image-wrapper" and "image", then add "pull-left" without modification
+css_module("events", "image-wrapper image", "pull-left")
+#=> "events_123_image-wrapper events_123_image pull-left
+```
+
+#### Null module
+
+If you pass `nil` as the module name, _no_ transformation is applied to the selectors.
+
+```ruby
+css_module(nil, "media-row")
+# => "media-row"
+css_module(nil) do |styles|
+  styles.selector("image image--main", "pull-left")
+  # => "image image--main pull-left"
+end
+```
+
 ### Use modulized names in JavaScript
 
 In JavaScript, you can include a helper to access module styles:
@@ -88,10 +111,27 @@ function header() {
 }
 ```
 
-`CSSModule` requires the global JS function `btoa`. To include a polyfill from this gem, add:
+#### Extra classes
+
+You can also provide _multiple_, space-separated class names and/or extra class names to add without a module:
 
 ```js
-//= require base64
+// Apply "events" to "image-wrapper" and "image", then add "pull-left" without modification
+CSSModule("events", "image-wrapper image", "pull-left")
+// "events_123_image-wrapper events_123_image pull-left"
+```
+
+#### Null module
+
+If you pass `null` as the module name, `CSSModule` will make _no_ transformation:
+
+```js
+CSSModule(null, "item")
+// => "item"
+
+var cssModule = CSSModule(null)
+cssModule("item")
+// => item
 ```
 
 ## Installation
