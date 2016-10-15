@@ -34,6 +34,10 @@ class RewriteTest < Minitest::Test
     before_css = ":module(item) #container h1 {\n  background: rbga(255, 255, 255, 0.8);\n}"
     after_css = "#item_5142_container h1 {\n  background: rbga(255, 255, 255, 0.8); }\n"
     assert_rewrite_module before_css, after_css
+
+    before_css = ":module(item) h1#container {\n  background: rbga(255, 255, 255, 0.8);\n}"
+    after_css = "h1#item_5142_container {\n  background: rbga(255, 255, 255, 0.8); }\n"
+    assert_rewrite_module before_css, after_css
   end
 
   def test_it_rewrites_immediate_child_selectors

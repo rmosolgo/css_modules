@@ -5,7 +5,7 @@ module CSSModules
   module Rewrite
     # Module Scopes
     # :module(login) { .button {color: red;} }
-    RE_MODULE = /^\:module\((?<module_name>.*?)\)\s+(?<declarations>.*)/
+    RE_MODULE = /^\:module\((?<module_name>.*?)\)/
 
     module_function
     # Take css module code as input, and rewrite it as
@@ -36,7 +36,6 @@ module CSSModules
       # No need to `yield` here since we run _after_ Sass -- it's already flattened.
       # @return [void]
       def visit_rule(node)
-        node.rule = node.rule.map { |r| transform_selector(r) }
         node.parsed_rules = rebuild_parsed_rules(node.parsed_rules)
       end
 
@@ -44,46 +43,72 @@ module CSSModules
 
       def rebuild_parsed_rules(parsed_rules)
         new_members = parsed_rules.members.map do |member_seq|
-          # `member_seq` is actually a deeply-nested array-like thing
-          # but since we're running _after_ Sass itself,
-          # we know all the tricky stuff is already taken care of.
-          # So now we can flatten it and re-parse it, no problem.
-          rule_s = member_seq.to_s
-          transformed_rule_s = transform_selector(rule_s)
-          selector_to_sass(transformed_rule_s)
+          leading_rule = first_selector(member_seq).to_s
+          matches = Rewrite::RE_MODULE.match(leading_rule)
+          if matches
+            module_name = matches[:module_name]
+            deeply_transform(module_name, member_seq)
+          else
+            member_seq
+          end
         end
         Sass::Selector::CommaSequence.new(new_members)
       end
 
-      def selector_to_sass(selector)
-        # This strips off leading whitespace, should I be putting it back on?
-        Sass::SCSS::StaticParser.new(selector.strip, nil, 1).parse_selector
-      end
-
-      # This parses the selector for `:module` definitions or does nothing.
-      def transform_selector(selector)
-        matches = Rewrite::RE_MODULE.match(selector)
-        if matches.nil?
-          selector
+      # Get the first non-sequence member of `seq`
+      def first_selector(seq)
+        case seq
+        when Sass::Selector::AbstractSequence
+          first_selector(seq.members.first)
         else
-          module_name = matches[:module_name]
-          declaration_parts = matches[:declarations].split(" ")
-          declaration_parts
-            .map { |declaration_or_operator| rebuild_selector(module_name, declaration_or_operator) }
-            .join(" ")
+          seq
         end
       end
 
-      # If `selector` is a class or ID, scope it to this module.
-      # If it is a bare element, leave it unscoped.
-      def rebuild_selector(module_name, selector)
-        case selector[0]
-        when "#"
-          "##{Rewrite.modulize_selector(module_name, selector[1..-1])}"
-        when "."
-          ".#{Rewrite.modulize_selector(module_name, selector[1..-1])}"
+      # We know this is a modulized rule
+      # now we should transform its ID and classes to modulized
+      def deeply_transform(module_name, seq)
+        case seq
+        when Sass::Selector::AbstractSequence
+          new_members = seq.members.map { |m| deeply_transform(module_name, m) }
+          new_members.compact! # maybe a module selector returned nil
+          clone_sequence(seq, new_members)
+        when Sass::Selector::Id, Sass::Selector::Class
+          modulized_name = Rewrite.modulize_selector(module_name, seq.name)
+          seq.class.new(modulized_name)
+        when Sass::Selector::Pseudo
+          if seq.to_s =~ /:module/
+            nil
+          else
+            seq
+          end
         else
-          selector
+          seq
+        end
+      end
+
+      # Make a new kind of `seq`, containing `new_members`
+      def clone_sequence(seq, new_members)
+        case seq
+        when Sass::Selector::Sequence
+          seq.class.new(new_members)
+        when Sass::Selector::CommaSequence
+          seq.class.new(new_members)
+        when Sass::Selector::SimpleSequence
+          seq.class.new(new_members, seq.subject?, seq.source_range)
+        else
+          raise("Unknown sequence to clone: #{seq.class}")
+        end
+      end
+
+      # Debug print-out of a sequence:
+      def deep_print(seq, indent = "")
+        case seq
+        when Sass::Selector::AbstractSequence
+          puts indent + seq.class.name + " => "
+          seq.members.map { |m| deep_print(m, indent + "  ") }
+        else
+          puts indent + seq.class.name + " (#{seq})"
         end
       end
     end
