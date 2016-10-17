@@ -95,7 +95,7 @@ module CSSModules
         when Sass::Selector::CommaSequence
           seq.class.new(new_members)
         when Sass::Selector::SimpleSequence
-          seq.class.new(new_members, seq.subject?, seq.source_range)
+          seq.class.new(new_members, seq.subject?)
         else
           raise("Unknown sequence to clone: #{seq.class}")
         end
