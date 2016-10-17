@@ -74,7 +74,7 @@ module CSSModules
           new_members.compact! # maybe a module selector returned nil
           clone_sequence(seq, new_members)
         when Sass::Selector::Id, Sass::Selector::Class
-          modulized_name = Rewrite.modulize_selector(module_name, seq.name)
+          modulized_name = Rewrite.modulize_selector(module_name, seq.name.first)
           seq.class.new(modulized_name)
         when Sass::Selector::Pseudo
           if seq.to_s =~ /:module/
