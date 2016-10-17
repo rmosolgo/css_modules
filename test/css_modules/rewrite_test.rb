@@ -24,6 +24,13 @@ class RewriteTest < Minitest::Test
     assert_rewrite_module before_css, after_css
   end
 
+  def test_it_rewrites_comma_selectors
+    before_css = ":module(item) #container .title, :module(item) #container .subtitle {\n  background: rbga(255, 255, 255, 0.8);\n}"
+    after_css = "#item_5142_container .item_5142_title,  #item_5142_container .item_5142_subtitle {\n  background: rbga(255, 255, 255, 0.8); }\n"
+    assert_rewrite_module before_css, after_css
+  end
+
+
   def test_it_doesnt_rewrite_bare_element_selectors
     before_css = ":module(item) span {\n  background: rbga(255, 255, 255, 0.8);\n}"
     after_css = "span {\n  background: rbga(255, 255, 255, 0.8); }\n"

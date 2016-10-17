@@ -43,8 +43,8 @@ module CSSModules
 
       def rebuild_parsed_rules(parsed_rules)
         new_members = parsed_rules.members.map do |member_seq|
-          leading_rule = first_selector(member_seq).to_s
-          matches = Rewrite::RE_MODULE.match(leading_rule)
+          leading_rule = first_pseudo_selector(member_seq).to_s
+          matches = leading_rule && Rewrite::RE_MODULE.match(leading_rule)
           if matches
             module_name = matches[:module_name]
             deeply_transform(module_name, member_seq)
@@ -55,13 +55,15 @@ module CSSModules
         Sass::Selector::CommaSequence.new(new_members)
       end
 
-      # Get the first non-sequence member of `seq`
-      def first_selector(seq)
+      # Get the first Sass::Selector::Pseudo member of `seq`, or nil
+      def first_pseudo_selector(seq)
         case seq
         when Sass::Selector::AbstractSequence
-          first_selector(seq.members.first)
-        else
+          seq.members.find { |m| first_pseudo_selector(m) }
+        when Sass::Selector::Pseudo
           seq
+        else # eg, String
+          nil
         end
       end
 

@@ -18,5 +18,7 @@ class EngineTest < Minitest::Test
 
   def test_it_does_real_code
     assert_transformed_asset_includes "dialog.css", ".suggested-resources_2653_suggested-resource-row"
+    assert_transformed_asset_includes "dialog.css",
+      ".resources_9015_info input.resources_9015_naked-field,.resources_9015_info select.resources_9015_naked-field,.resources_9015_info textarea.resources_9015_naked-field{margin:0 5px;padding:0 4px}"
   end
 end
