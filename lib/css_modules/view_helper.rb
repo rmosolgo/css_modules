@@ -40,7 +40,7 @@ module CSSModules
       elsif selector_names.present?
         lookup.selector(selector_names.to_s, bare_selector_names.to_s)
       else
-        raise("css_module must be called with a module_name and either selector_names or a block")
+        lookup
       end
     end
 

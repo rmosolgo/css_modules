@@ -4,6 +4,7 @@
   <%= link_to "here", {}, class: pages.selector(:link) %>
 <% end %>
 
-<%= link_to "null here", {}, class: css_module(nil, "link") %>
+<% null_module = css_module(nil) %>
+<%= link_to "null here", {}, class: null_module.selector("link") %>
 
 <div class="<%= css_module("pages", "footer", "make-it-pop") %>">Footer</div>
