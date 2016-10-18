@@ -158,8 +158,6 @@ $ gem install css_modules
   - Warn when not all styles are used?
   - Sprockets require CSS to JS? `require_styles` ?
 - Support plain `.css`
-- Support Sprockets 3+
-- Test on different Sass versions
 - Check for hash collisions in development
 - Fix sprockets cache: a new version of this gem should expire an old cache
 
