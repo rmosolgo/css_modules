@@ -6,4 +6,6 @@ rvm:
   - 2.3.0
 
 gemfile:
-  - Gemfile
+  - gemfiles/sass_3.2_sprockets_2.gemfile
+  - gemfiles/sass_3.4_sprockets_2.gemfile
+  - gemfiles/sass_3.4_sprockets_3.gemfile
