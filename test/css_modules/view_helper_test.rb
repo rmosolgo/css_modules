@@ -11,4 +11,9 @@ class ViewHelperTest  < ActionDispatch::IntegrationTest
     assert_select "a.link", "null here"
     assert_select "div.pages_#{pages_hash}_footer.make-it-pop", "Footer"
   end
+
+  def test_module_responds_to_name
+    get "/page"
+    assert_select "p.module-name", "pages"
+  end
 end

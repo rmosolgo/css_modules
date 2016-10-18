@@ -7,8 +7,18 @@ module CSSModules
   #     helper CSSModules::ViewHelper
   #   end
   module ViewHelper
-    # @overload css_module(module_name, selector_name)
+    # @overload css_module(module_name)
     #   Apply the styles from `module_name` for `selector_name`
+    #
+    #   @example Passing a module to a partial
+    #      style_module = css_module("events_index")
+    #      render(partial: "header", locals: { style_module: style_module })
+    #
+    #   @param module_name [String]
+    #   @return [StyleModule] helper for modulizing selectors within `module_name`
+    #
+    # @overload css_module(module_name, selector_names, bare_selector_names)
+    #   Apply the styles from `module_name` for `selector_names`
     #
     #   @example Getting a selector within a module
     #      css_module("events_index", "header")
@@ -29,14 +39,14 @@ module CSSModules
     #     <% end %>
     #
     #   @param module_name [String]
-    #   @yieldparam [ModuleLookup] a helper for modulizing selectors within `module_name`
-    #   @return [void]
+    #   @yieldparam [StyleModule] a helper for modulizing selectors within `module_name`
+    #   @return [StyleModule] a helper for modulizing selectors within `module_name`
     def css_module(module_name, selector_names = nil, bare_selector_names = nil, &block)
-      lookup = ModuleLookup.new(module_name)
+      lookup = StyleModule.new(module_name)
 
       if selector_names.nil? && block_given?
         yield(lookup)
-        nil
+        lookup
       elsif selector_names.present?
         lookup.selector(selector_names.to_s, bare_selector_names.to_s)
       else
@@ -44,9 +54,13 @@ module CSSModules
       end
     end
 
-    class ModuleLookup
+    class StyleModule
       def initialize(module_name)
         @module_name = module_name
+      end
+
+      def name
+        @module_name
       end
 
       # @see {ViewHelper#css_module}
