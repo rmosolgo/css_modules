@@ -152,6 +152,11 @@ Or install it yourself as:
 $ gem install css_modules
 ```
 
+## Implementation notes
+
+- The gem outputs shorter names when `Rails.env.production?`
+- Module names are hashed in Ruby and JS, see `transform.rb` and `css_module.js` for the hash function
+
 ## TODO
 
 - Dead code warning for Development env:
